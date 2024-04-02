@@ -7,6 +7,12 @@
 #include <RAT/GeoBuilder.hh>
 #include <RAT/GeoCalibrationStickFactory.hh>
 #include <RAT/GeoCherenkovSourceFactory.hh>
+///////////////
+#include <RAT/GeoConeFactory.hh>
+#include <RAT/GeoConeCutFactory.hh>
+#include <RAT/GeoBarFactory.hh>
+#include <RAT/GeoVetoFactory.hh>
+///////////
 #include <RAT/GeoConvexLensFactory.hh>
 #include <RAT/GeoCutTubeFactory.hh>
 #include <RAT/GeoLensFactory.hh>
@@ -32,11 +38,14 @@
 #include <RAT/PMTCoverageFactory.hh>
 #include <RAT/WLSPCoverFactory.hh>
 #include <RAT/WLSPFactory.hh>
+//#include <RAT/GeoPolyhedraFactory.hh>
 
 namespace RAT {
 
 GeoBuilder::GeoBuilder() {
   // Register all the standard volumes
+
+  new GeoBarFactory();   // hws
   new GeoBoxFactory();
   new GeoTubeFactory();
   new GeoTorusFactory();
@@ -44,6 +53,8 @@ GeoBuilder::GeoBuilder() {
   new GeoReflectorFactory();
   new GeoReflectorWaveguideFactory();
   new PMTArrayFactory();
+  new GeoConeFactory();   // hws
+  new GeoConeCutFactory();   // hws
   new PMTCoverageFactory();
   new GeoWaterBoxArrayFactory();
   new GeoBubbleFactory();
@@ -61,8 +72,10 @@ GeoBuilder::GeoBuilder() {
   new GeoPerfBoxFactory();
   new GeoCutTubeFactory();
   new GeoPolyArrayFactory();
+  new GeoVetoFactory();  //hws
   new WLSPFactory();
   new WLSPCoverFactory();
+  //new GeoPolyhedraFactory();
 
   // Extra components
   new GeoCherenkovSourceFactory();

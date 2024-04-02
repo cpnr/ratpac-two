@@ -12,11 +12,14 @@ add_library(geo OBJECT
         src/GLG4PMTSD.cc
         src/GLG4TestSolid.cc
         src/GLG4TorusStack.cc
+        src/GeoBarFactory.cc
         src/GeoBoxFactory.cc
         src/GeoBubbleFactory.cc
         src/GeoBuilder.cc
         src/GeoCalibrationStickFactory.cc
         src/GeoCherenkovSourceFactory.cc
+        src/GeoConeFactory.cc
+        src/GeoConeCutFactory.cc
         src/GeoConvexLensFactory.cc
         src/GeoCutTubeFactory.cc
         src/GeoEosFactory.cc
@@ -40,6 +43,7 @@ add_library(geo OBJECT
         src/GeoTubeArrayFactory.cc
         src/GeoTubeFactory.cc
         src/GeoTubeIntersectionFactory.cc
+        src/GeoVetoFactory.cc
         src/GeoWaterBoxArrayFactory.cc
         src/Materials.cc
         src/TubeFacetSolid.cc
@@ -47,12 +51,6 @@ add_library(geo OBJECT
         src/WaterBoxConstruction.cc
         src/WLSPFactory.cc
         src/WLSPCoverFactory.cc
-        src/gdml/GDMLMessenger.cc
-        src/gdml/GDMLParser.cc
-        src/gdml/GDMLWriteParamvol.cc
-        src/gdml/GDMLWriteSolids.cc
-        src/gdml/GDMLWriteSetup.cc
-        src/gdml/GDMLWriteStructure.cc
         src/pmt/CubicPMTConstruction.cc
         src/pmt/LAPPDConstruction.cc
         src/pmt/PMTArrayFactory.cc
@@ -64,10 +62,10 @@ add_library(geo OBJECT
         src/pmt/RevolutionPMTConstruction.cc
         src/pmt/ToroidalPMTConstruction.cc
         )
+        #src/GeoPolyhedraFactory.cc
+        #)
 
 # Set our include directories
-target_include_directories(geo SYSTEM PUBLIC 
-        $<BUILD_INTERFACE:${RATPAC_INCLUDE_DIR}/stlplus>)
 target_include_directories(geo PUBLIC
         $<BUILD_INTERFACE:${RATPAC_INCLUDE_DIR}>
         $<INSTALL_INTERFACE:include>)
