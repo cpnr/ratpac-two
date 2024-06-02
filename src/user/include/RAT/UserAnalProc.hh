@@ -44,6 +44,11 @@ class UserAnalProc : public Processor {
   double b_Gen_Px, b_Gen_Py, b_Gen_Pz, b_Gen_KE;  // [MeV/C],[MeV/C],[MeV/C],[MeV]
   int b_Gen_PdgId;
 
+  std::vector<double> b_MC_HitTime_PMT0; // photon hit time at PMT one by one
+  std::vector<double> b_MC_HitTime_PMT1;
+  std::vector<double> b_MC_HitCharge_PMT0; // photon charge one by one
+  std::vector<double> b_MC_HitCharge_PMT1;
+
  protected:
   // For the neutron capture analysis... to be moved in a separate sub-class
   std::vector<double> b_Ncap_GammaKE;         // [MeV]
@@ -52,6 +57,8 @@ class UserAnalProc : public Processor {
   std::string b_Ncap_pName;
   std::string b_Ncap_Volume;            // Volume where neutron captured , ex) "target_GdLS", "target_vessel"
   double b_Ncap_X, b_Ncap_Y, b_Ncap_Z;  // [mm],[mm],[mm]
+  double b_Ncap_gTime; // [ns], captured time of neutron to Gd or sth.
+
 };
 
 }  // namespace RAT
