@@ -82,6 +82,12 @@ bool UserAnalProc::OpenFile(const std::string fileName) {
 
   outTree_->Branch("Gen_PdgId", &b_Gen_PdgId, "Gen_PdgId/I");
 
+  outTree_->Branch("MC_HitTime_PMT0", &b_MC_HitTime_PMT0);
+  outTree_->Branch("MC_HitTime_PMT1", &b_MC_HitTime_PMT1);
+  outTree_->Branch("MC_HitCharge_PMT0", &b_MC_HitCharge_PMT0);
+  outTree_->Branch("MC_HitCharge_PMT1", &b_MC_HitCharge_PMT1);
+
+
   // Variables for neutron capture analysis
   outTree_->Branch("Ncap_GammaKE", &b_Ncap_GammaKE);
   outTree_->Branch("Ncap_SumGammaKE", &b_Ncap_SumGammaKE, "Ncap_SumGammaKE/D");
@@ -92,6 +98,7 @@ bool UserAnalProc::OpenFile(const std::string fileName) {
   outTree_->Branch("Ncap_X", &b_Ncap_X, "Ncap_X/D");
   outTree_->Branch("Ncap_Y", &b_Ncap_Y, "Ncap_Y/D");
   outTree_->Branch("Ncap_Z", &b_Ncap_Z, "Ncap_Z/D");
+  outTree_->Branch("Ncap_gTime", &b_Ncap_gTime, "Ncap_gTime/D");
 
   return true;
 }
@@ -122,12 +129,19 @@ Processor::Result UserAnalProc::DSEvent(DS::Root *ds) {
   b_Gen_Px = b_Gen_Py = b_Gen_Pz = b_Gen_KE = 0;
   b_Gen_PdgId = 0;
 
+  b_MC_HitTime_PMT0.clear();
+  b_MC_HitTime_PMT1.clear();
+  b_MC_HitCharge_PMT0.clear();
+  b_MC_HitCharge_PMT1.clear();
+
+
   b_Ncap_GammaKE.clear();
   b_Ncap_SumGammaKE = b_Ncap_Edeposit = 0;
   b_Ncap_PdgId = 0;
   b_Ncap_pName = "";
   b_Ncap_Volume = "";
   b_Ncap_X = b_Ncap_Y = b_Ncap_Z = 0;
+  b_Ncap_gTime = 0;
 
   for (int subev = 0; subev < ds->GetEVCount(); ++subev) {
     auto event = ds->GetEV(subev);
@@ -151,6 +165,7 @@ Processor::Result UserAnalProc::DSEvent(DS::Root *ds) {
   const std::string pName_Ncap = track_Ncap->GetParticleName();
   auto step_Ncap = track_Ncap->GetMCTrackStep(track_Ncap->GetMCTrackStepCount() - 1);
   b_Ncap_Volume = step_Ncap->GetVolume();
+  b_Ncap_gTime = step_Ncap->GetGlobalTime();
 
   auto endPoint_Ncap = step_Ncap->GetEndpoint();
   b_Ncap_X = endPoint_Ncap.X();
@@ -223,6 +238,18 @@ Processor::Result UserAnalProc::DSEvent(DS::Root *ds) {
     }
     const int nHit = mcPMT->GetMCPhotonCount();
     b_PMT_NPE[pmtID] += nHit;
+    for ( int iHit=0; iHit<nHit; ++iHit ) {
+      auto hit = mcPMT->GetMCPhoton(iHit);
+      if( pmtID==0){
+        b_MC_HitTime_PMT0.push_back(hit->GetHitTime());
+        b_MC_HitCharge_PMT0.push_back(hit->GetCharge());
+      }
+      if( pmtID==1){
+        b_MC_HitTime_PMT1.push_back(hit->GetHitTime());
+        b_MC_HitCharge_PMT1.push_back(hit->GetCharge());
+      }
+    }
+
   }
 
   outTree_->Fill();
