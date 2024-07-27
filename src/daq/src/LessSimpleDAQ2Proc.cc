@@ -40,6 +40,7 @@ Processor::Result LessSimpleDAQ2Proc::DSEvent(DS::Root *ds) {
       htArraySort;  // hit time     ...we are not using this either...
 
   // get the information for 1 full event and put them in std::vectors
+  unsigned long Index=0;
   for (int imcpmt = 0; imcpmt < mc->GetMCPMTCount(); imcpmt++) {
     DS::MCPMT *mcpmt = mc->GetMCPMT(imcpmt);
 
@@ -49,9 +50,10 @@ Processor::Result LessSimpleDAQ2Proc::DSEvent(DS::Root *ds) {
         tArraySort.push_back(mcpmt->GetMCPhoton(i)->GetFrontEndTime());
         qArray.push_back(mcpmt->GetMCPhoton(i)->GetCharge());
         idArray.push_back(mcpmt->GetID());
-        iArray.push_back(i);
+        iArray.push_back(Index);
         phArray.push_back(mcpmt->GetMCPhotonCount());
         htArray.push_back(mcpmt->GetMCPhoton(i)->GetHitTime());
+        Index++;
       }
     }
   }
