@@ -27,6 +27,7 @@
 #include <RAT/SplitEVDAQProc.hh>
 #include <RAT/TrueDAQProc.hh>
 #include <RAT/UserAnalProc.hh>
+#include <RAT/RENETestDAQProc.hh> 
 
 namespace RAT {
 
@@ -89,6 +90,7 @@ ProcBlockManager::ProcBlockManager(ProcBlock *theMainBlock) {
   AppendProcessor<LessSimpleDAQProc>();
   AppendProcessor<LessSimpleDAQ2Proc>();
   AppendProcessor<TrueDAQProc>();
+  AppendProcessor<RENETestDAQProc>();
   // Misc
   AppendProcessor<CountProc>();
   AppendProcessor<PruneProc>();

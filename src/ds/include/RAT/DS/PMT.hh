@@ -60,6 +60,12 @@ class PMT : public TObject {
 
   virtual void SetPeakVoltage(Double_t _peak) { this->peak = _peak; }
   virtual Double_t GetPeakVoltage() { return peak; }
+  
+  virtual void SetTriggerTime(double _triggerTime) { this->triggerTime = _triggerTime; }
+  virtual double GetTriggerTime() { return triggerTime; }
+  
+  virtual void SetWaveVector(const std::vector<double>& _WaveVector) { this->WaveVector = _WaveVector; } 
+  virtual const std::vector<double>& GetWaveVector() const { return WaveVector; }
 
   ClassDef(PMT, 4);
 
@@ -76,6 +82,10 @@ class PMT : public TObject {
   Double_t timeOverThresh;
   Double_t pedestal;
   Double_t peak;
+  
+  double triggerTime;
+  
+  std::vector<double> WaveVector;
 };
 
 }  // namespace DS
