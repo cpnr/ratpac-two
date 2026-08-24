@@ -576,6 +576,14 @@ void analyze() {
 >
 > 이 수정들은 **Geant4 11.3 미만 / ROOT 6.36 미만에서는 오히려 빌드를 깨뜨린다.** 구버전 환경과 코드를 공유한다면 그대로 가져가지 말 것.
 
+여기에 더해 버그 수정 한 건이 있다 (커밋 `0ce7f4d`).
+
+| 파일 | 내용 |
+|---|---|
+| `tools/ntuple/ntuple.cpp` | 독립 실행 `ntuple` 도구가 모든 입력에 대해 segfault로 죽었다. `RunStore::SetReadTree()`를 호출하도록 수정 → [5장](#ntuple-명령이-segmentation-fault로-죽음) |
+
+이쪽은 버전 의존성이 없어 상위 저장소에도 그대로 적용된다.
+
 여기에 더해, 커밋하지 않고 작업 트리에만 두는 수정이 하나 있다.
 
 | 파일 | 내용 |
@@ -641,15 +649,17 @@ macOS SDK가 붙이는 경고다. 상위 코드의 문제이며 동작에는 영
 [libRATPAC.dylib] RAT::OutNtupleProc::DSEvent(RAT::DS::Root*)
 ```
 
-**독립 실행 도구 `ntuple`의 알려진 버그다.** 이 포크의 수정과는 무관하며 상위 저장소에도 그대로 있다.
+**이 포크에서는 수정됐다** (커밋 `0ce7f4d`). 상위 저장소에는 여전히 남아 있으므로, `upstream`에서 merge할 때 되돌아오지 않았는지 확인할 것.
 
-원인: `tools/ntuple/ntuple.cpp`가 `runT` 트리에서 `proc.runBranch`를 직접 설정하지만, `OutNtupleProc::DSEvent()`가 첫 줄에서 `runBranch = DS::RunStore::GetRun(ds)`로 이를 덮어쓴다. 독립 도구는 `DS::RunStore::SetReadTree()`를 호출하지 않으므로 `GetRun()`이 `nullptr`을 반환하고, 다음 줄의 `runBranch->GetPMTInfo()`에서 죽는다. (`InROOTProducer`는 `SetReadTree()`를 호출하기 때문에 `rat` 안에서는 문제가 없다.)
+원인: `tools/ntuple/ntuple.cpp`가 `runT` 트리에서 `proc.runBranch`를 직접 설정했지만, `OutNtupleProc::DSEvent()`가 첫 줄에서 `runBranch = DS::RunStore::GetRun(ds)`로 이를 덮어썼다. 독립 도구는 `DS::RunStore::SetReadTree()`를 호출하지 않으므로 `GetRun()`이 `nullptr`을 반환하고, 다음 줄의 `runBranch->GetPMTInfo()`에서 죽었다. (`InROOTProducer`는 `SetReadTree()`를 호출하기 때문에 `rat` 안에서는 문제가 없었다.)
 
-**우회 방법: 매크로에서 `outntuple` 프로세서를 쓴다.** 결과물은 동일하다.
+수정은 `runBranch`를 직접 건드리는 대신 `RunStore`에 읽기 트리를 등록하는 것이다.
 
+```cpp
+RAT::DS::RunStore::SetReadTree(run);
 ```
-/rat/proclast outntuple
-```
+
+이렇게 하면 `GetRun()`이 run 트리를 스캔해 캐시에 넣고 올바른 `Run`을 반환한다. 결과물은 매크로에서 `outntuple` 프로세서를 쓴 것과 **브랜치 38개가 전부 동일하다.**
 
 ### 시각화가 열리지 않음
 
