@@ -2,6 +2,7 @@
 #include <TRegexp.h>
 
 #include <RAT/PythonProc.hh>
+#include <any>
 
 namespace RAT {
 
@@ -59,9 +60,11 @@ void PythonProc::SetS(std::string param, std::string value) {
 
 Processor::Result PythonProc::DSEvent(DS::Root *ds) {
   TPython::Bind(ds, "ds");
-  std::string cmd = fPyProcName + ".dsevent(ds)";
-  // First cast to int since that is supported by TPyResult
-  int result = TPython::Eval(cmd.c_str());
+  std::string cmd = "import ROOT; _anyresult = ROOT.std.make_any['int'](" + fPyProcName + ".dsevent(ds))";
+  // TPython::Eval was removed in ROOT 6.36; the result crosses over in a std::any instead
+  std::any anyresult;
+  if (!TPython::Exec(cmd.c_str(), &anyresult)) Log::Die("Python exception.");
+  int result = std::any_cast<int>(anyresult);
   if (result == -1) Log::Die("Python exception.");
   return (Processor::Result)result;
 }

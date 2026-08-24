@@ -331,8 +331,8 @@ const G4LogicalSkinSurface* GDMLWriteStructure::GetSkinSurface(const G4LogicalVo
   if (nsurf) {
     const G4LogicalSkinSurfaceTable* stable = G4LogicalSkinSurface::GetSurfaceTable();
     for (auto pos = stable->cbegin(); pos != stable->cend(); ++pos) {
-      if (lvol == (*pos)->GetLogicalVolume()) {
-        surf = *pos;
+      if (lvol == pos->first) {
+        surf = pos->second;
         break;
       }
     }
