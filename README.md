@@ -6,6 +6,9 @@
 [![clang-format Check](https://github.com/rat-pac/ratpac-two/actions/workflows/check-format.yml/badge.svg)](https://github.com/rat-pac/ratpac-two/actions/workflows/check-format.yml)
 
 [ratpac.readthedocs.io](ratpac.readthedocs.io)
+
+> **한글 가이드** — macOS(Apple Silicon) 설치 및 기본 사용법: [doc/GUIDE_ko.md](doc/GUIDE_ko.md)
+
 ## Installation
 Installation requires [ROOT 6.25+](https://root.cern.ch), 
 [Geant4 11.0+](https://geant4.web.cern.ch/), and [cmake 3.22+](https://cmake.org/)
