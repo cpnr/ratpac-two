@@ -4,6 +4,7 @@
 #include <RAT/AnyParse.hh>
 #include <RAT/DB.hh>
 #include <RAT/DBTable.hh>
+#include <RAT/DS/RunStore.hh>
 #include <RAT/Log.hh>
 #include <RAT/OutNtupleProc.hh>
 #include <fstream>
@@ -45,8 +46,9 @@ int main(int argc, char **argv) {
     proc.options.pmthits = parser->GetValue("pmthits", false);
     proc.options.untriggered = parser->GetValue("untriggered", false);
 
-    run->SetBranchAddress("run", &proc.runBranch);
-    run->GetEvent(0);
+    // OutNtupleProc::DSEvent looks the run up through RunStore, so pointing
+    // runBranch straight at the tree here would just get overwritten.
+    RAT::DS::RunStore::SetReadTree(run);
 
     proc.OpenFile(outputname);
     for (int ev = 0; ev < T->GetEntries(); ev++) {

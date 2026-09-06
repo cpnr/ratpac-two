@@ -21,7 +21,6 @@
 // Not needing external packages or libraries...
 #include "G4ASCIITree.hh"
 #include "G4DAWNFILE.hh"
-#include "G4HepRepFile.hh"
 #include "G4HitFilterFactories.hh"
 #include "G4OpenGLImmediateQt.hh"
 #include "G4OpenGLStoredQt.hh"
@@ -80,7 +79,6 @@ void GLG4VisManager::RegisterGraphicsSystems() {
   // Graphics Systems not needing external packages or libraries...
   RegisterGraphicsSystem(new G4ASCIITree);
   RegisterGraphicsSystem(new G4DAWNFILE);
-  RegisterGraphicsSystem(new G4HepRepFile);
   RegisterGraphicsSystem(new G4RayTracer);
   RegisterGraphicsSystem(new G4VRML2File);
   RegisterGraphicsSystem(new G4OpenGLImmediateQt);
