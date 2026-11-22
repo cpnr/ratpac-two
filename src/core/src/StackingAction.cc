@@ -45,9 +45,10 @@ G4ClassificationOfNewTrack StackingAction::ClassifyNewTrack(const G4Track *track
   // we postpone all of its secondaries except the 158Gd.
   // These secondaries are then send here (StackingAction.cc)
   // to be removed.
-  // GetTrackStatus()==5 is the fPostponeToNextEvent
+  // Compare with the enum: Geant4 11.4 inserted fSuspendAndWait before
+  // fPostponeToNextEvent, so its numeric value is no longer 5.
 
-  if (track->GetTrackStatus() == 5 && (nameParticle == "gamma" || nameParticle == "e-")) {
+  if (track->GetTrackStatus() == fPostponeToNextEvent && (nameParticle == "gamma" || nameParticle == "e-")) {
     return fKill;
   } else {
     return fUrgent;
